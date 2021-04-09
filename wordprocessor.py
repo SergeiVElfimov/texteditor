@@ -3,15 +3,7 @@ import sys
 import uuid
 
 from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtGui import (
-    QAction,
-    QActionGroup,
-    QFont,
-    QIcon,
-    QImage,
-    QKeySequence,
-    QTextDocument,
-)
+from PyQt6.QtGui import QAction, QActionGroup, QFont, QIcon, QImage, QKeySequence, QTextDocument
 from PyQt6.QtPrintSupport import QPrintDialog
 from PyQt6.QtWidgets import (
     QApplication,
@@ -61,14 +53,10 @@ class TextEdit(QTextEdit):
                     image = QImage(u.toLocalFile())
                     document.addResource(QTextDocument.ImageResource, u, image)
                     cursor.insertImage(u.toLocalFile())
-
                 else:
-                    # If we hit a non-image or non-local URL break the loop and fall out
-                    # to the super call & let Qt handle it
                     break
 
             else:
-                # If all were valid images, finish here.
                 return
 
         elif source.hasImage():
@@ -87,17 +75,12 @@ class MainWindow(QMainWindow):
 
         layout = QVBoxLayout()
         self.editor = TextEdit()
-        # Setup the QTextEdit editor configuration
         self.editor.setAutoFormatting(QTextEdit.AutoFormatting.AutoAll)
         self.editor.selectionChanged.connect(self.update_format)
-        # Initialize default font size.
         font = QFont("Times", 12)
         self.editor.setFont(font)
-        # We need to repeat the size to init the current format.
         self.editor.setFontPointSize(12)
 
-        # self.path holds the path of the currently open file.
-        # If none, we haven't got a file open yet (or creating new).
         self.path = None
 
         layout.addWidget(self.editor)
@@ -108,9 +91,6 @@ class MainWindow(QMainWindow):
 
         self.status = QStatusBar()
         self.setStatusBar(self.status)
-
-        # Uncomment to disable native menubar on Mac
-        # self.menuBar().setNativeMenuBar(False)
 
         file_toolbar = QToolBar("File")
         file_toolbar.setIconSize(QSize(14, 14))
@@ -135,13 +115,13 @@ class MainWindow(QMainWindow):
         file_menu.addAction(save_file_action)
         file_toolbar.addAction(save_file_action)
 
-        saveas_file_action = QAction(
+        save_as_file_action = QAction(
             QIcon(os.path.join("images", "disk--pencil.png")), "Save As...", self
         )
-        saveas_file_action.setStatusTip("Save current page to specified file")
-        saveas_file_action.triggered.connect(self.file_saveas)
-        file_menu.addAction(saveas_file_action)
-        file_toolbar.addAction(saveas_file_action)
+        save_as_file_action.setStatusTip("Save current page to specified file")
+        save_as_file_action.triggered.connect(self.file_save_as)
+        file_menu.addAction(save_as_file_action)
+        file_toolbar.addAction(save_as_file_action)
 
         print_action = QAction(
             QIcon(os.path.join("images", "printer.png")), "Print...", self
@@ -226,7 +206,6 @@ class MainWindow(QMainWindow):
         self.addToolBar(format_toolbar)
         format_menu = self.menuBar().addMenu("&Format")
 
-        # We need references to these actions/settings to update as selection changes, so attach to self.
         self.fonts = QFontComboBox()
         self.fonts.currentFontChanged.connect(self.editor.setCurrentFont)
         format_toolbar.addWidget(self.fonts)
@@ -234,8 +213,6 @@ class MainWindow(QMainWindow):
         self.fontsize = QComboBox()
         self.fontsize.addItems([str(s) for s in FONT_SIZES])
 
-        # Connect to the signal producing the text of the current selection. Convert the string to float
-        # and set as the pointsize. We could also use the index + retrieve from FONT_SIZES.
         self.fontsize.currentTextChanged[str].connect(
             lambda s: self.editor.setFontPointSize(float(s))
         )
@@ -277,74 +254,71 @@ class MainWindow(QMainWindow):
 
         format_menu.addSeparator()
 
-        self.alignl_action = QAction(
+        self.align_left_action = QAction(
             QIcon(os.path.join("images", "edit-alignment.png")), "Align left", self
         )
-        self.alignl_action.setStatusTip("Align text left")
-        self.alignl_action.setCheckable(True)
-        self.alignl_action.triggered.connect(
+        self.align_left_action.setStatusTip("Align text left")
+        self.align_left_action.setCheckable(True)
+        self.align_left_action.triggered.connect(
             lambda: self.editor.setAlignment(Qt.Alignment.AlignLeft)
         )
-        format_toolbar.addAction(self.alignl_action)
-        format_menu.addAction(self.alignl_action)
+        format_toolbar.addAction(self.align_left_action)
+        format_menu.addAction(self.align_left_action)
 
-        self.alignc_action = QAction(
+        self.align_center_action = QAction(
             QIcon(os.path.join("images", "edit-alignment-center.png")),
             "Align center",
             self,
         )
-        self.alignc_action.setStatusTip("Align text center")
-        self.alignc_action.setCheckable(True)
-        self.alignc_action.triggered.connect(
+        self.align_center_action.setStatusTip("Align text center")
+        self.align_center_action.setCheckable(True)
+        self.align_center_action.triggered.connect(
             lambda: self.editor.setAlignment(Qt.Alignment.AlignCenter)
         )
-        format_toolbar.addAction(self.alignc_action)
-        format_menu.addAction(self.alignc_action)
+        format_toolbar.addAction(self.align_center_action)
+        format_menu.addAction(self.align_center_action)
 
-        self.alignr_action = QAction(
+        self.align_right_action = QAction(
             QIcon(os.path.join("images", "edit-alignment-right.png")),
             "Align right",
             self,
         )
-        self.alignr_action.setStatusTip("Align text right")
-        self.alignr_action.setCheckable(True)
-        self.alignr_action.triggered.connect(
+        self.align_right_action.setStatusTip("Align text right")
+        self.align_right_action.setCheckable(True)
+        self.align_right_action.triggered.connect(
             lambda: self.editor.setAlignment(Qt.Alignment.AlignRight)
         )
-        format_toolbar.addAction(self.alignr_action)
-        format_menu.addAction(self.alignr_action)
+        format_toolbar.addAction(self.align_right_action)
+        format_menu.addAction(self.align_right_action)
 
-        self.alignj_action = QAction(
+        self.align_justify_action = QAction(
             QIcon(os.path.join("images", "edit-alignment-justify.png")), "Justify", self
         )
-        self.alignj_action.setStatusTip("Justify text")
-        self.alignj_action.setCheckable(True)
-        self.alignj_action.triggered.connect(
+        self.align_justify_action.setStatusTip("Justify text")
+        self.align_justify_action.setCheckable(True)
+        self.align_justify_action.triggered.connect(
             lambda: self.editor.setAlignment(Qt.Alignment.AlignJustify)
         )
-        format_toolbar.addAction(self.alignj_action)
-        format_menu.addAction(self.alignj_action)
+        format_toolbar.addAction(self.align_justify_action)
+        format_menu.addAction(self.align_justify_action)
 
         format_group = QActionGroup(self)
         format_group.setExclusive(True)
-        format_group.addAction(self.alignl_action)
-        format_group.addAction(self.alignc_action)
-        format_group.addAction(self.alignr_action)
-        format_group.addAction(self.alignj_action)
+        format_group.addAction(self.align_left_action)
+        format_group.addAction(self.align_center_action)
+        format_group.addAction(self.align_right_action)
+        format_group.addAction(self.align_justify_action)
 
         format_menu.addSeparator()
 
-        # A list of all format-related widgets/actions, so we can disable/enable signals when updating.
         self._format_actions = [
             self.fonts,
             self.fontsize,
             self.bold_action,
             self.italic_action,
             self.underline_action,
-            # We don't need to disable signals for alignment, as they are paragraph-wide.
         ]
 
-        # Initialize.
         self.update_format()
         self.update_title()
         self.show()
@@ -355,29 +329,27 @@ class MainWindow(QMainWindow):
 
     def update_format(self):
         """
-        Update the font format toolbar/actions when a new text selection is made. This is neccessary to keep
+        Update the font format toolbar/actions when a new text selection is made. This is necessary to keep
         toolbars/etc. in sync with the current edit state.
         :return:
         """
-        # Disable signals for all format widgets, so changing values here does not trigger further formatting.
+
         self.block_signals(self._format_actions, True)
-
         self.fonts.setCurrentFont(self.editor.currentFont())
-        # Nasty, but we get the font-size as a float but want it was an int
         self.fontsize.setCurrentText(str(int(self.editor.fontPointSize())))
-
         self.italic_action.setChecked(self.editor.fontItalic())
         self.underline_action.setChecked(self.editor.fontUnderline())
         self.bold_action.setChecked(self.editor.fontWeight() == QFont.bold)
-
-        self.alignl_action.setChecked(self.editor.alignment() == Qt.Alignment.AlignLeft)
-        self.alignc_action.setChecked(
+        self.align_left_action.setChecked(
+            self.editor.alignment() == Qt.Alignment.AlignLeft
+        )
+        self.align_center_action.setChecked(
             self.editor.alignment() == Qt.Alignment.AlignCenter
         )
-        self.alignr_action.setChecked(
+        self.align_right_action.setChecked(
             self.editor.alignment() == Qt.Alignment.AlignRight
         )
-        self.alignj_action.setChecked(
+        self.align_justify_action.setChecked(
             self.editor.alignment() == Qt.Alignment.AlignJustify
         )
 
@@ -406,14 +378,12 @@ class MainWindow(QMainWindow):
 
         else:
             self.path = path
-            # Qt will automatically try and guess the format as txt/html
             self.editor.setText(text)
             self.update_title()
 
     def file_save(self):
         if self.path is None:
-            # If we do not have a path, we need to use Save As.
-            return self.file_saveas()
+            return self.file_save_as()
 
         text = (
             self.editor.toHtml()
@@ -428,7 +398,7 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.dialog_critical(str(e))
 
-    def file_saveas(self):
+    def file_save_as(self):
         path, _ = QFileDialog.getSaveFileName(
             self,
             "Save file",
@@ -437,7 +407,6 @@ class MainWindow(QMainWindow):
         )
 
         if not path:
-            # If dialog is cancelled, will return ''
             return
 
         text = (
