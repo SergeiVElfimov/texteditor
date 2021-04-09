@@ -2,10 +2,30 @@ import os
 import sys
 import uuid
 
-from PyQt6.QtCore import *
-from PyQt6.QtGui import *
-from PyQt6.QtPrintSupport import *
-from PyQt6.QtWidgets import *
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import (
+    QAction,
+    QActionGroup,
+    QFont,
+    QIcon,
+    QImage,
+    QKeySequence,
+    QTextDocument,
+)
+from PyQt6.QtPrintSupport import QPrintDialog
+from PyQt6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QFileDialog,
+    QFontComboBox,
+    QMainWindow,
+    QMessageBox,
+    QStatusBar,
+    QTextEdit,
+    QToolBar,
+    QVBoxLayout,
+    QWidget,
+)
 
 FONT_SIZES = [7, 8, 9, 10, 11, 12, 13, 14, 18, 24, 36, 48, 64, 72, 96, 144, 288]
 IMAGE_EXTENSIONS = [".jpg", ".png", ".bmp"]
