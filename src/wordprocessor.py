@@ -1,12 +1,10 @@
 import os
-import sys
 import uuid
 
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QAction, QActionGroup, QFont, QIcon, QImage, QKeySequence, QTextDocument
 from PyQt6.QtPrintSupport import QPrintDialog
 from PyQt6.QtWidgets import (
-    QApplication,
     QComboBox,
     QFileDialog,
     QFontComboBox,
@@ -439,12 +437,3 @@ class MainWindow(QMainWindow):
 
     def edit_toggle_wrap(self):
         self.editor.setLineWrapMode(1 if self.editor.lineWrapMode() == 0 else 0)
-
-
-if __name__ == "__main__":
-
-    app = QApplication(sys.argv)
-    app.setApplicationName("Megasolid Idiom")
-
-    window = MainWindow()
-    app.exec()
