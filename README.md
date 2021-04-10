@@ -1,4 +1,4 @@
-# Megasolid Idiom — A rich text editor in PyQt
+# Free text editor— A rich text editor in PyQt
 
 The word processor for all your small, poorly formatted documents. 
 An extension of the notepad, again using a QTextEdit but with rich
