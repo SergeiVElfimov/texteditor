@@ -1,10 +1,9 @@
 from PyQt6.QtGui import QImage, QTextDocument
-from PyQt6.QtWidgets import (
-    QTextEdit,
-)
+from PyQt6.QtWidgets import QTextEdit
 
-from .utils import hexuuid, splitext
 from .settings import IMAGE_EXTENSIONS
+from .utils import hexuuid, splitext
+
 
 class TextEdit(QTextEdit):
     def canInsertFromMimeData(self, source):
