@@ -1,5 +1,4 @@
 import os
-import uuid
 
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QAction, QActionGroup, QFont, QIcon, QImage, QKeySequence, QTextDocument
@@ -17,17 +16,11 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from .utils import hexuuid, splitext
+
 FONT_SIZES = [7, 8, 9, 10, 11, 12, 13, 14, 18, 24, 36, 48, 64, 72, 96, 144, 288]
 IMAGE_EXTENSIONS = [".jpg", ".png", ".bmp"]
-HTML_EXTENSIONS = [".htm", ".html"]
-
-
-def hexuuid():
-    return uuid.uuid4().hex
-
-
-def splitext(p):
-    return os.path.splitext(p)[1].lower()
+TEXT_EXTENSIONS = [".txt"]
 
 
 class TextEdit(QTextEdit):
@@ -364,7 +357,7 @@ class MainWindow(QMainWindow):
             self,
             "Open file",
             "",
-            "HTML documents (*.html);Text documents (*.txt);All files (*.*)",
+            "Text documents (*.txt);;All files (*.*)",
         )
 
         try:
@@ -385,7 +378,7 @@ class MainWindow(QMainWindow):
 
         text = (
             self.editor.toHtml()
-            if splitext(self.path) in HTML_EXTENSIONS
+            if splitext(self.path) in TEXT_EXTENSIONS
             else self.editor.toPlainText()
         )
 
@@ -401,7 +394,7 @@ class MainWindow(QMainWindow):
             self,
             "Save file",
             "",
-            "HTML documents (*.html);Text documents (*.txt);All files (*.*)",
+            "Text documents (*.txt);;All files (*.*)",
         )
 
         if not path:
@@ -409,7 +402,7 @@ class MainWindow(QMainWindow):
 
         text = (
             self.editor.toHtml()
-            if splitext(path) in HTML_EXTENSIONS
+            if splitext(path) in TEXT_EXTENSIONS
             else self.editor.toPlainText()
         )
 
